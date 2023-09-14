@@ -3,66 +3,77 @@
 /**
  * partition - function to partiotion the array based on
  * the pivot
- * @arr: array to partition
+ * @array: array to partition
  * @low: starting index
  * @high: ending index
+ * @size: size of array
+ * Return: smaller element
  */
 
-int partition(int arr[], int low, int high)
+int partition(int *array, int low, int high, size_t size)
 {
 	int pivot, i, j, tmp;
 
-	pivot = arr[high];
+	pivot = array[high];
 	i = (low - 1);
-	
+
 	for (j = low; j <= high - 1; j++)
 	{
-		if (arr[j] < pivot)
+		if (array[j] < pivot)
 		{
 			i++;
-			tmp = arr[i];
-			arr[i] = arr[j];
-			arr[j] = tmp;
+			if (i != j)
+			{
+			tmp = array[i];
+			array[i] = array[j];
+			array[j] = tmp;
+			print_array(array, size);
+			}
 		}
 	}
-	tmp = arr[i + 1];
-	arr[i + 1] = arr[high];
-	arr[high] = tmp;
-
+	if (array[high] < array[i + 1])
+	{
+		tmp = array[i + 1];
+		array[i + 1] = array[high];
+		array[high] = tmp;
+		print_array(array, size);
+	}
 	return (i + 1);
 }
 
 /**
- * quick_sort - function that sorts an array of integers in
- * ascending order using the Quick sort algorithm
+ * lomutoSort - lomuto partition scheme
  * @array: array to be sorted
+ * @low: starting index
+ * @high: ending index
  * @size: size of array
  */
 
-void quick_sort_recursive(int *array, int low, int high)
+void lomutoSort(int *array, int low, int high, size_t size)
 {
-	int pi, i;
+	int pi;
 
 	if (low < high)
 	{
-		pi = partition(array, low, high);
+		pi = partition(array, low, high, size);
 
-		for (i = low; i <= high; i++)
-		{
-
-		/**print_array(array + low, pi - low + 1);**/
-		}
-		quick_sort_recursive(array, low, pi - 1);
-	       quick_sort_recursive(array, pi + 1, high);
+		lomutoSort(array, low, pi - 1, size);
+		lomutoSort(array, pi + 1, high, size);
 	}
 }
+
+/**
+ * quick_sort - function to sort an array of int in ascending order
+ * using uick sort algorithm
+ * @array: array to be sorted
+ * @size: size of array
+ */
 
 void quick_sort(int *array, size_t size)
 {
 	if (size <= 1)
 		return;
 
-	quick_sort_recursive(array, 0, size - 1);
-	print_array(array, size);
+	lomutoSort(array, 0, size - 1, size);
 }
 
